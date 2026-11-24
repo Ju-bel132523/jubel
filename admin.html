@@ -22,7 +22,7 @@
     .actions button{padding:6px 10px;font-size:12px}.imgs{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px}
     .imgs div{position:relative}.imgs button{position:absolute;top:-6px;right:-6px;padding:0;width:20px;height:20px;border-radius:50%;background:#c0392b}
     #msg{position:fixed;bottom:16px;left:50%;transform:translateX(-50%);background:#111;color:#fff;padding:10px 16px;border-radius:8px;display:none;max-width:90%}
-    .chk{display:flex;gap:16px;margin-top:12px}.chk label{display:flex;gap:6px;align-items:center;margin:0;font-weight:600}.chk input{width:auto}
+    .hint{font-size:12px;color:#666;margin:6px 0 0}.chk{display:flex;gap:16px;margin-top:12px}.chk label{display:flex;gap:6px;align-items:center;margin:0;font-weight:600}.chk input{width:auto}
   </style>
 </head>
 <body>
@@ -51,12 +51,45 @@
       <label for="f_desc">Deskripsi lengkap</label><textarea id="f_desc"></textarea>
       <div class="row">
         <div><label for="f_condition">Kondisi</label><input id="f_condition" placeholder="Baru / Bekas"></div>
-        <div><label for="f_location">Lokasi</label><input id="f_location" placeholder="Kota, Provinsi"></div>
+        <div><label for="f_availability">Ketersediaan</label><select id="f_availability"><option>Tersedia</option><option>Dipesan</option><option>Terjual</option></select></div>
+      </div>
+
+      <h3 style="margin:22px 0 0;font-size:15px">Lokasi</h3>
+      <div class="row">
+        <div><label for="f_prov">Provinsi *</label><select id="f_prov"><option value="">Memuat...</option></select></div>
+        <div><label for="f_reg">Kota / Kabupaten *</label><select id="f_reg" disabled><option value="">Pilih provinsi dulu</option></select></div>
       </div>
       <div class="row">
-        <div><label for="f_availability">Ketersediaan</label><input id="f_availability" value="Tersedia"></div>
-        <div><label for="f_wa">WhatsApp penjual (08xx / 62xx)</label><input id="f_wa" inputmode="tel"></div>
+        <div><label for="f_dist">Kecamatan *</label><select id="f_dist" disabled><option value="">Pilih kota/kabupaten dulu</option></select></div>
+        <div><label for="f_vil">Kelurahan / Desa *</label><select id="f_vil" disabled><option value="">Pilih kecamatan dulu</option></select></div>
       </div>
+      <label for="f_addr">Alamat detail (jalan, nomor, RT/RW, patokan)</label>
+      <input id="f_addr" maxlength="200" placeholder="Jl. Melati No. 5, RT 02/RW 03">
+      <div class="chk"><label><input type="checkbox" id="f_addr_wa"> Alamat detail diberikan via WhatsApp JUBEL (tidak ditampilkan di situs)</label></div>
+      <p class="hint">Kalau dicentang, alamat detail <b>tidak disimpan</b> dan situs menampilkan catatan "Alamat detail via WhatsApp" setelah nama wilayah.</p>
+
+      <div id="landBox">
+        <h3 style="margin:22px 0 0;font-size:15px">Detail tanah &amp; titik peta</h3>
+        <div class="row">
+          <div><label for="f_land">Luas tanah (m²)</label><input id="f_land" type="number" min="0" step="any" inputmode="decimal"></div>
+          <div><label for="f_cert">Jenis sertifikat</label>
+            <select id="f_cert"><option value="">Pilih</option><option>SHM</option><option>HGB</option><option>Hak Pakai</option><option>Girik / Letter C</option><option>AJB</option><option>Belum bersertifikat</option><option>Lainnya</option></select></div>
+        </div>
+        <div class="row">
+          <div><label for="f_road">Lebar akses jalan (m)</label><input id="f_road" type="number" min="0" step="any" inputmode="decimal"></div>
+          <div><label for="f_map">Titik peta Google Maps</label><input id="f_map" placeholder="-6.200000, 106.816666"></div>
+        </div>
+        <p class="hint" id="f_map_info">Di Google Maps: tekan lama (HP) atau klik kanan (komputer) pada titik tanah, lalu ketuk angka koordinat yang muncul (otomatis tersalin) dan tempel di sini. Bisa juga menempel link Google Maps yang panjang. Link pendek (maps.app.goo.gl) tidak bisa dibaca.</p>
+      </div>
+
+      <h3 style="margin:22px 0 0;font-size:15px">Data privat penjual <small style="font-weight:400;color:#777">(tidak tampil di situs)</small></h3>
+      <div class="row">
+        <div><label for="f_sname">Nama penjual</label><input id="f_sname"></div>
+        <div><label for="f_sphone">WhatsApp penjual</label><input id="f_sphone" inputmode="tel" placeholder="08xx / 62xx"></div>
+      </div>
+      <label for="f_smin">Harga minimal penjual (Rp)</label><input id="f_smin" type="number" min="0" inputmode="numeric">
+      <label for="f_snote">Catatan internal (kondisi, perjanjian komisi, dll.)</label><textarea id="f_snote"></textarea>
+
       <label for="f_badge">Badge (opsional)</label><input id="f_badge" placeholder="JUBEL FIND" maxlength="30">
       <label for="f_files">Foto (maks. 4, JPG/PNG/WEBP, maks. 3 MB per foto)</label>
       <input id="f_files" type="file" accept="image/jpeg,image/png,image/webp" multiple>
@@ -69,6 +102,29 @@
     </section>
 
     <section class="card"><h2>Daftar produk</h2><div id="list">Memuat...</div></section>
+
+    <section class="card">
+      <h2 id="leadFormTitle">Catat peminat</h2>
+      <input type="hidden" id="l_id">
+      <label for="l_product">Produk yang diminati</label><select id="l_product"></select>
+      <div class="row">
+        <div><label for="l_name">Nama calon pembeli *</label><input id="l_name"></div>
+        <div><label for="l_phone">WhatsApp pembeli</label><input id="l_phone" inputmode="tel"></div>
+      </div>
+      <div class="row">
+        <div><label for="l_status">Status</label>
+          <select id="l_status"><option value="peminat">Peminat</option><option value="survei">Survei</option><option value="nego">Nego</option><option value="deal">Deal</option><option value="komisi_dibayar">Komisi dibayar</option><option value="batal">Batal</option></select></div>
+        <div><label for="l_survey">Tanggal survei</label><input id="l_survey" type="date"></div>
+      </div>
+      <div class="row">
+        <div><label for="l_deal">Harga deal (Rp)</label><input id="l_deal" type="number" min="0" inputmode="numeric"></div>
+        <div><label for="l_comm">Komisi (Rp)</label><input id="l_comm" type="number" min="0" inputmode="numeric"></div>
+      </div>
+      <label for="l_notes">Catatan</label><textarea id="l_notes"></textarea>
+      <p><button id="leadSave">SIMPAN PEMINAT</button> <button id="leadReset" class="ghost">BATAL / BARU</button></p>
+    </section>
+
+    <section class="card"><h2>Daftar peminat</h2><p class="hint" id="leadSummary"></p><div id="leadList">Memuat...</div></section>
   </div>
 </div>
 <div id="msg" role="status"></div>

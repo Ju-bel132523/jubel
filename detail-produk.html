@@ -11,6 +11,7 @@
     content="Lihat detail produk pilihan di etalase JUBEL dan hubungi penjual langsung.">
 
   <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/land.css">
 </head>
 <body>
 
@@ -119,7 +120,7 @@
 
       <p class="product-price-note">
         Harga dan ketersediaan dapat berubah.
-        Silakan konfirmasi langsung kepada penjual.
+        Silakan konfirmasi ketersediaan kepada tim JUBEL.
       </p>
 
 
@@ -159,17 +160,17 @@
         <h3>Tertarik dengan produk ini?</h3>
 
         <p>
-          Hubungi penjual untuk mendapatkan informasi lebih lanjut,
-          memastikan ketersediaan, dan berdiskusi mengenai produk.
+          Hubungi tim JUBEL untuk informasi spesifikasi dan harga,
+          memastikan ketersediaan, serta menjadwalkan survei lokasi.
         </p>
 
         <a href="#" id="productWhatsapp" class="product-whatsapp-btn">
-          <span>HUBUNGI PENJUAL VIA WHATSAPP</span>
+          <span>TANYA / JADWALKAN SURVEI VIA WHATSAPP</span>
           <span>&rarr;</span>
         </a>
 
         <small>
-          Kamu akan terhubung langsung dengan penjual.
+          Kamu akan terhubung dengan tim JUBEL, yang mendampingi sampai survei lokasi.
         </small>
 
       </div>
@@ -180,6 +181,17 @@
 
     </div>
 
+  </section>
+
+
+  <!-- DETAIL TANAH & PETA (diisi otomatis, tampil hanya jika data tanah ada) -->
+  <section class="product-land-section" id="landSection" hidden>
+    <div class="product-description-heading">
+      <span class="section-label">DETAIL TANAH</span>
+      <h2>Spesifikasi &amp; lokasi.</h2>
+    </div>
+    <div class="land-specs" id="landSpecs"></div>
+    <div class="land-map" id="landMap" hidden></div>
   </section>
 
 
