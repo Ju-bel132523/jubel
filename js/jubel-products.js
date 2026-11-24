@@ -1,6 +1,7 @@
 /* JUBEL PRODUCT DATA - dimuat dari Supabase (tabel products). Lihat supabase/schema.sql dan js/supabase-config.js */
 (function () {
   const PRODUCTS = [];
+  const JUBEL_WA = "6285283212487"; // WhatsApp JUBEL (format internasional, tanpa +)
 
   const CATEGORY_LABELS = {
     properti: "PROPERTI", gadget: "GADGET", otomotif: "OTOMOTIF",
@@ -31,11 +32,16 @@
   }
 
   function whatsappURL(product) {
-    let phone = String(product.sellerWhatsApp || "").replace(/\D/g, "");
-    if (!phone) return "";
-    if (phone.charAt(0) === "0") phone = "62" + phone.slice(1);
-    const text = "Halo, saya tertarik dengan produk \"" + product.title + "\" di JUBEL. Apakah masih tersedia?";
-    return "https://wa.me/" + phone + "?text=" + encodeURIComponent(text);
+    const shortId = String(product.id || "").slice(0, 8).toUpperCase();
+    const text = "Halo JUBEL, saya tertarik dengan \"" + product.title + "\" (ID: " + shortId + "). " +
+      "Mohon info spesifikasi, harga, dan jadwal survei.\n" + window.location.href;
+    return "https://wa.me/" + JUBEL_WA + "?text=" + encodeURIComponent(text);
+  }
+
+  function pricePerM2(product) {
+    const price = Number(product.price), area = Number(product.landArea);
+    if (!(price > 0) || !(area > 0)) return null;
+    return Math.round(price / area);
   }
 
   function imageBlock(product, className) {
@@ -77,7 +83,9 @@
       id: r.id, title: r.title, category: r.category, price: r.price,
       priceLabel: r.price_label, shortDescription: r.short_description,
       description: r.description, condition: r.condition, location: r.location,
-      availability: r.availability, sellerWhatsApp: r.seller_whatsapp,
+      availability: r.availability,
+      landArea: r.land_area, certificateType: r.certificate_type, roadWidth: r.road_width,
+      mapLat: r.map_lat, mapLng: r.map_lng,
       images: Array.isArray(r.images) ? r.images : [], badge: r.badge,
       featured: r.featured === true
     };
@@ -103,5 +111,5 @@
     console.error("JUBEL: gagal memuat produk", err);
   });
   window.JUBEL_CATEGORY_LABELS = CATEGORY_LABELS;
-  window.JUBEL_PRODUCT_UTILS = { escapeHTML: escapeHTML, formatPrice: formatPrice, hasPrice: hasPrice, whatsappURL: whatsappURL, cardHTML: cardHTML, featuredHTML: featuredHTML };
+  window.JUBEL_PRODUCT_UTILS = { escapeHTML: escapeHTML, formatPrice: formatPrice, hasPrice: hasPrice, whatsappURL: whatsappURL, pricePerM2: pricePerM2, cardHTML: cardHTML, featuredHTML: featuredHTML };
 })();

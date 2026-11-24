@@ -42,6 +42,34 @@ document.addEventListener("DOMContentLoaded", async function () {
     if (images.length > 1) thumbnails.innerHTML = images.slice(1, 4).map(src => '<div class="product-thumbnail-image"><img src="' + utils.escapeHTML(src) + '" alt="Foto tambahan produk" loading="lazy"></div>').join("");
     else thumbnails.innerHTML = '<div>FOTO 02</div><div>FOTO 03</div><div>FOTO 04</div>';
   }
+  /* Detail tanah & peta */
+  const landSection = document.getElementById("landSection");
+  if (landSection) {
+    const E = utils.escapeHTML, n = (v) => Number(v).toLocaleString("id-ID");
+    const specs = [];
+    if (product.landArea) specs.push(["LUAS TANAH", n(product.landArea) + " m²"]);
+    const perM2 = utils.pricePerM2(product);
+    if (perM2) specs.push(["HARGA PER M²", "Rp " + n(perM2)]);
+    if (product.certificateType) specs.push(["SERTIFIKAT", product.certificateType]);
+    if (product.roadWidth) specs.push(["LEBAR AKSES JALAN", n(product.roadWidth) + " m"]);
+    if (product.availability) specs.push(["STATUS", product.availability]);
+    const hasMap = product.mapLat != null && product.mapLng != null;
+    if (specs.length || hasMap) {
+      landSection.hidden = false;
+      document.getElementById("landSpecs").innerHTML = specs.map(function (x) {
+        return '<div class="land-spec"><span>' + E(x[0]) + '</span><strong>' + E(x[1]) + '</strong></div>';
+      }).join("");
+    }
+    if (hasMap) {
+      const lat = Number(product.mapLat), lng = Number(product.mapLng);
+      const box = document.getElementById("landMap");
+      box.hidden = false;
+      box.innerHTML = '<iframe title="Peta lokasi" loading="lazy" referrerpolicy="no-referrer-when-downgrade" ' +
+        'src="https://maps.google.com/maps?q=' + lat + ',' + lng + '&z=16&output=embed"></iframe>' +
+        '<a class="land-map-link" href="https://www.google.com/maps?q=' + lat + ',' + lng + '" target="_blank" rel="noopener noreferrer">BUKA DI GOOGLE MAPS &rarr;</a>';
+    }
+  }
+
   const badge = document.querySelector(".product-detail-badge");
   if (badge) { if (product.badge) badge.textContent = product.badge; else badge.hidden = true; }
   const waURL = utils.whatsappURL(product);
